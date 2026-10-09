@@ -20,7 +20,9 @@ header p{margin:10px 0 0;opacity:.85;font-size:15px}
 main{max-width:1180px;margin:0 auto;padding:28px 16px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:26px}
 .card{background:#fff;border-radius:18px;box-shadow:0 10px 30px rgba(11,26,58,.10);overflow:hidden}
-.card video{width:100%;aspect-ratio:9/16;background:#000;display:block}
+.card .vwrap{position:relative}.card .vwrap video{width:100%;aspect-ratio:9/16;background:#000;display:block}
+.sound{position:absolute;left:50%;top:14px;transform:translateX(-50%);background:rgba(11,26,58,.85);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer}
+.sound[hidden]{display:none}
 .body{padding:16px 18px 20px}h2{margin:0 0 6px;font-size:20px}h1{margin:0;font-size:26px}
 .meta{color:var(--mut);font-size:13px;margin-bottom:12px}
 .btn{display:inline-block;background:var(--blue);color:#fff;text-decoration:none;padding:11px 16px;border-radius:999px;font-weight:600;font-size:14px;margin:4px 6px 4px 0}
@@ -31,10 +33,29 @@ footer{text-align:center;color:var(--mut);font-size:13px;padding:30px}
 </style></head>
 <body><header><img src="https://teond1090.github.io/safehugg-social/media/safehugg_logo_white.png" alt="SafeHugg"><p>Health, mental wellness, and personal safety, wrapped in a Hugg!</p></header>
 <main><div class="card single">
-<video controls playsinline preload="metadata" poster="https://teond1090.github.io/safehugg-social/media/safeword.jpg" src="https://teond1090.github.io/safehugg-social/media/safeword.mp4"></video>
-<div class="body"><h2>Say Your Safe Word</h2><div class="meta">Vertical 9:16 &middot; 1080&times;1920 &middot; 49 s</div>
-<a class="btn" href="https://teond1090.github.io/safehugg-social/media/safeword.mp4" download>Download MP4</a>
+<div class="vwrap"><video controls playsinline preload="auto" poster="https://teond1090.github.io/safehugg-social/media/safeword.jpg" src="https://teond1090.github.io/safehugg-social/media/safeword.mp4"></video></div>
+<div class="body"><h2>Say Your Safe Word</h2><div class="meta">49 s &middot; vertical 9:16 for Reels, TikTok, Shorts &middot; square 1:1 for Facebook and LinkedIn</div>
+<a class="btn" href="https://teond1090.github.io/safehugg-social/media/safeword.mp4" download>Download 9:16</a><a class="btn" href="https://teond1090.github.io/safehugg-social/media/safeword_1x1.mp4" download>Download 1:1 (Facebook)</a>
 <div class="cap"><b>Suggested post</b>
 One word. Four people. Help on the way.
 
-Walking alone at night shouldn&#x27;t feel like a risk. Say your safe word and SafeHugg alerts your four closest people, streams live video and records to the cloud, even with no signal. #SafeHugg #PersonalSafety #WrappedInAHugg</div></div></div></main><footer>SafeHugg &middot; <a href="https://www.safehugg.com/">safehugg.com</a> &middot; info@safehugg.com</footer></body></html>
+Walking alone at night shouldn&#x27;t feel like a risk. Say your safe word and SafeHugg alerts your four closest people, streams live video and records to the cloud, even with no signal. #SafeHugg #PersonalSafety #WrappedInAHugg</div>
+<details style="margin-top:10px"><summary style="cursor:pointer;color:var(--mut);font-size:13px">Preview the square version</summary>
+<video controls playsinline preload="none" poster="https://teond1090.github.io/safehugg-social/media/safeword_1x1.jpg" src="https://teond1090.github.io/safehugg-social/media/safeword_1x1.mp4" style="width:100%;aspect-ratio:1/1;background:#000;margin-top:8px;border-radius:10px"></video></details>
+</div></div></main><footer>SafeHugg &middot; <a href="https://www.safehugg.com/">safehugg.com</a> &middot; info@safehugg.com</footer>
+<script>
+// Autoplay: once a video has loaded, wait 2 s, then play. Browsers only allow this muted, so it starts muted with a
+// "tap for sound" button; any tap/click on the page unmutes it.
+document.querySelectorAll('.card video').forEach(function(v, i){
+  var wrap = v.parentElement, btn = document.createElement('button');
+  btn.className = 'sound'; btn.textContent = '\uD83D\uDD07 Tap for sound'; wrap.insertBefore(btn, v.nextSibling);
+  function unmute(){ v.muted = false; btn.hidden = true; if (v.paused) v.play().catch(function(){}); }
+  btn.addEventListener('click', function(e){ e.stopPropagation(); unmute(); });
+  v.addEventListener('volumechange', function(){ if (!v.muted) btn.hidden = true; });
+  var started = false;
+  function go(){ if (started) return; started = true; setTimeout(function(){ v.muted = true; v.play().catch(function(){}); }, 2000); }
+  if (i === 0 || document.querySelectorAll('.card video').length === 1) {
+    if (v.readyState >= 2) go(); else v.addEventListener('loadeddata', go, {once:true});
+  }
+});
+</script></body></html>
