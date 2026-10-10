@@ -21,8 +21,6 @@ main{max-width:1180px;margin:0 auto;padding:28px 16px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:26px}
 .card{background:#fff;border-radius:18px;box-shadow:0 10px 30px rgba(11,26,58,.10);overflow:hidden}
 .card .vwrap{position:relative}.card .vwrap video{width:100%;aspect-ratio:9/16;background:#000;display:block}
-.sound{position:absolute;left:50%;top:14px;transform:translateX(-50%);background:rgba(11,26,58,.85);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer}
-.sound[hidden]{display:none}
 .body{padding:16px 18px 20px}h2{margin:0 0 6px;font-size:20px}h1{margin:0;font-size:26px}
 .meta{color:var(--mut);font-size:13px;margin-bottom:12px}
 .btn{display:inline-block;background:var(--blue);color:#fff;text-decoration:none;padding:11px 16px;border-radius:999px;font-weight:600;font-size:14px;margin:4px 6px 4px 0}
@@ -47,13 +45,11 @@ Walking alone at night shouldn&#x27;t feel like a risk. Say your safe word and S
 // Autoplay: once a video has loaded, wait 2 s, then play. Browsers only allow this muted, so it starts muted with a
 // "tap for sound" button; any tap/click on the page unmutes it.
 document.querySelectorAll('.card video').forEach(function(v, i){
-  var wrap = v.parentElement, btn = document.createElement('button');
-  btn.className = 'sound'; btn.textContent = '\uD83D\uDD07 Tap for sound'; wrap.insertBefore(btn, v.nextSibling);
-  function unmute(){ v.muted = false; btn.hidden = true; if (v.paused) v.play().catch(function(){}); }
-  btn.addEventListener('click', function(e){ e.stopPropagation(); unmute(); });
-  v.addEventListener('volumechange', function(){ if (!v.muted) btn.hidden = true; });
+  var wrap = v.parentElement;
+  // one tap on the picture turns the sound on (the player's own mute control works too)
+  v.addEventListener('click', function(){ if (v.muted) { v.muted = false; if (v.paused) v.play().catch(function(){}); } });
   v.addEventListener('error', function(){   // decode/network failure: show the poster image instead of a black box
-    var img = document.createElement('img'); img.src = v.poster; img.style.cssText = 'width:100%;display:block'; wrap.replaceChild(img, v); btn.hidden = true;
+    var img = document.createElement('img'); img.src = v.poster; img.style.cssText = 'width:100%;display:block'; wrap.replaceChild(img, v);
   });
   var started = false;
   function go(){ if (started) return; started = true; setTimeout(function(){ v.muted = true; v.play().catch(function(){}); }, 2000); }
